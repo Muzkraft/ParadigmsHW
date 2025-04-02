@@ -1,0 +1,96 @@
+● Контекст
+Продолжаем исследовать генеалогию с помощью
+логического программирования. Подобный пример мы уже
+разбирали на лекции. На этот раз ваша задача реализовать
+генеалогическое древо на языке Prolog самостоятельно.
+● Ваша задача
+Реализовать изображённое генеалогическое древо на языке
+Prolog таким образом, чтобы про Алексея и Анастасию можно
+было узнать кто их: мать, отец, дедушки, бабушки, дети.
+
+
+female(lubov).
+female(galina).
+female(vera).
+female(anastasia).
+female(olga).
+male(sergey).
+male(vladimir).
+male(alexander).
+male(serafim).
+parent(vera, lubov).
+parent(vera, sergey).
+parent(alexey, galina).
+parent(alexey, vladimir).
+parent(anastasia, vera).
+parent(anastasia, alexey).
+parent(olga, vera).
+parent(olga, alexey).
+parent(serafim, anastasia).
+parent(serafim, alexander).
+
+
+father(X,Y):- parent(X,Y), male(Y).
+mother(X,Y):- parent(X,Y), female(Y).
+grandfather(X,Z):- parent(X,Y), father(Y,Z).
+grandmother(X,Z):- parent(X,Y), mother(Y,Z).
+
+child(X,Y):- parent(Y,X).
+
+Контекст
+Данную задачу мы уже видели и решали с помощью императивной и декларативной парадигмы. Теперь
+давайте напишем её в логическом стиле.
+● Ваша задача
+Написать предикат на языке Prolog, который для входного списка возвращает максимальный элемент в
+этом списке.
+
+max_list([X], X).
+max_list([H|T], Max):-
+    max_list(T, Max1),
+    (H > Max1, Max is H; Max is Max1).
+
+?- max_list([1,2,3,4], X).
+
+● Контекст
+В предыдущем семинаре мы уже обсуждали важность выявления и удаления дубликатов в данных. В
+этот раз ваша задача реализовать именно удаление из списка с помощью логического
+программирования.
+● Ваша задача
+Реализовать логическую программу (предикат), которая принимает на вход массив и возвращает его
+версию без дубликатов.
+
+remove_duplicates([],[]).
+remove_duplicates([H|T], Result):-
+    member(H, T),
+    remove_duplicates(T, Result).
+remove_duplicates([H|T], [H|Result]):-
+    \+member(H, T),
+    remove_duplicates(T, Result).
+
+?- remove_duplicates([1,2,3,4,5,5,2,1], Result).
+
+● Контекст
+Мы уже видели множество решений этой задачи в различных
+стилях. Пришло время решить её с помощью логической
+парадигмы.
+● Ваша задача
+Написать программу на языке Prolog для вычисления суммы
+элементов списка. На вход подаётся целочисленный массив.
+На выходе - сумма элементов массива.
+
+sum_arr([], 0).
+sum_arr([H|T], Sum):-
+    sum_arr(T, Rest),
+    Sum is H + Rest.
+
+?- sum_arr([1,2,3,4,5,5,2,1], Sum).
+
+sum_arr(L, N):-
+    sum_arr(L, 0, N).
+
+sum_arr([],N,N).
+sum_arr([H|T],A,N) :-
+    A1 is A + H,
+    sum_arr(T,A1,N).
+
+?- sum_arr([1,2,3,4,5,5,2,1], Sum).
